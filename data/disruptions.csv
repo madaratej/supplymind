@@ -1,0 +1,21 @@
+id,date,disruption_type,cause,location,port,plant,material,supplier,alternate_supplier,delay_days,response_hours,financial_impact_inr_lakh,mitigation,outcome,success,lesson
+D01,2023-06-19,port_congestion,Monsoon flooding,Chennai,Chennai Port,Shamshabad,Steel coil,Kaveri Castings,Sahyadri Forgings,9,10,14,Activate Pune alternate,Delivered on revised date,Y,Pune alternate reliable for Chennai lanes
+D02,2023-10-14,port_closure,Cyclone,Visakhapatnam,Vizag Port,Patancheru,Steel coil,Bay Alloys,Sahyadri Forgings,11,8,16,Alternate plus road freight,Successful,Y,Activate within 24h
+D03,2023-11-27,port_congestion,Monsoon rain,Chennai,Chennai Port,Shamshabad,Castings,Kaveri Castings,Deccan Steelworks,13,20,21,Switch to Nagpur,Slow but delivered,P,Nagpur slower on response
+D04,2024-02-12,price_spike,Copper shortage,Bengaluru,-,Patancheru,Copper wire,Volt Metals,Ganga Conductors,0,6,9,Forward buy 60 days,Price capped,Y,Buy forward when spike signal appears
+D05,2024-05-06,port_closure,Cyclone warning,Visakhapatnam,Vizag Port,Patancheru,Steel coil,Bay Alloys,Sahyadri Forgings,10,7,15,Alternate plus buffer draw,Successful,Y,Pune alternate repeatable
+D06,2024-07-22,quality_failure,Porosity in castings,Chennai,-,Shamshabad,Castings,Kaveri Castings,Deccan Steelworks,7,12,11,Reject lot and switch,Recovered,Y,Add inbound inspection for Kaveri
+D07,2024-10-09,port_closure,Typhoon-related storm,Visakhapatnam,Vizag Port,Patancheru,Steel coil,Bay Alloys,Sahyadri Forgings,12,8,18,Alternate plus road freight,Successful,Y,Early activation capped delay
+D08,2024-11-30,port_congestion,Northeast monsoon,Chennai,Chennai Port,Shamshabad,Imported resin,PolyChem India,Sahyadri Forgings,8,9,13,Alternate lane via road,Successful,Y,Pre-order before Nov
+D09,2024-12-15,road_disruption,Landslide on NH44,Hyderabad,-,Patancheru,Bearings,Kaveri Castings,Deccan Steelworks,4,14,6,Reroute via Vijayawada,Successful,Y,Keep alternate route ready
+D10,2025-02-03,price_spike,Polymer resin surge,Chennai,-,Shamshabad,Resin,PolyChem India,Sahyadri Forgings,0,10,12,Renegotiate plus split order,Partial saving,P,Split orders limit exposure
+D11,2025-03-18,quality_failure,Fastener hardness fail,Bengaluru,-,Patancheru,Fasteners,Nandi Fasteners,Deccan Steelworks,5,15,8,Reject and rework,Recovered,Y,Test certificates needed
+D12,2025-05-27,road_disruption,Highway flooding,Bengaluru,-,Patancheru,Electronics,Nandi Fasteners,Sahyadri Forgings,6,11,7,Alternate carrier,Late delivery,P,Ask carrier ETA guarantee
+D13,2025-08-21,port_closure,Severe weather,Visakhapatnam,Vizag Port,Patancheru,Steel coil,Bay Alloys,Deccan Steelworks,9,18,24,Nagpur alternate,Partially successful,P,Nagpur costlier than Pune
+D14,2025-09-10,quality_failure,Casting porosity repeat,Chennai,-,Shamshabad,Castings,Kaveri Castings,Deccan Steelworks,9,13,15,Reject lot and re-source,Recovered,Y,Kaveri repeat quality risk
+D15,2025-10-16,port_congestion,Early monsoon,Chennai,Chennai Port,Shamshabad,Steel coil,Kaveri Castings,Sahyadri Forgings,7,8,12,Early alternate activation,Successful,Y,Early activation cuts delay
+D16,2025-11-08,port_closure,Cyclone,Visakhapatnam,Vizag Port,Patancheru,Steel coil,Bay Alloys,Kaveri Castings,14,16,31,Chennai alternate,Failed quality inspection,N,Do not use Kaveri for Vizag steel
+D17,2026-01-14,price_spike,HR coil surge,Visakhapatnam,-,Patancheru,HR coil,Bay Alloys,Deccan Steelworks,0,8,17,Forward buy plus renegotiation,Price capped,Y,Forward buy works
+D18,2026-02-25,road_disruption,Truckers strike,Hyderabad,-,Shamshabad,Castings,Kaveri Castings,Deccan Steelworks,5,12,9,Rail plus local carriers,Successful,Y,Rail fallback works
+D19,2026-04-09,quality_failure,Bearing tolerance fail,Bengaluru,-,Patancheru,Bearings,Nandi Fasteners,Deccan Steelworks,6,14,10,Reject and re-source,Recovered,Y,Sample check before lot release
+D20,2026-06-30,port_congestion,Pre-monsoon congestion,Chennai,Chennai Port,Shamshabad,Resin,PolyChem India,Sahyadri Forgings,6,8,11,Early buffer plus alternate,Successful,Y,Pre-monsoon buffers work
