@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SupplyMind</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0f1117; color: #e5e7eb; max-width: 900px; margin: 40px auto; padding: 0 20px; }
+  h1 { color: #60a5fa; }
+  textarea, input { width: 100%; padding: 10px; margin: 8px 0; background: #1a1d27; color: #fff; border: 1px solid #333; border-radius: 6px; box-sizing: border-box; }
+  button { background: #2563eb; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; margin: 6px 6px 6px 0; }
+  button:hover { background: #1d4ed8; }
+  .card { background: #1a1d27; border: 1px solid #333; border-radius: 10px; padding: 18px; margin: 16px 0; }
+  .memchip { display: inline-block; background: #14532d; color: #86efac; padding: 4px 10px; border-radius: 20px; margin: 3px; font-size: 13px; }
+  .badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; }
+  .high { background: #14532d; color: #86efac; }
+  .medium { background: #78350f; color: #fcd34d; }
+  .low { background: #450a0a; color: #fca5a5; }
+  pre { white-space: pre-wrap; }
+  #status { color: #9ca3af; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>🧠 SupplyMind</h1>
+<p>Memory-driven supply chain disruption assistant, powered by Hindsight.</p>
+
+<div class="card">
+  <h3>1. Report a disruption</h3>
+  <textarea id="signalText" rows="3" placeholder="e.g. Cyclone hits Visakhapatnam port, our steel coil shipment is stuck">Cyclone hits Visakhapatnam port, our steel coil shipment is stuck</textarea>
+  <button onclick="runFull()">Analyze & Recommend</button>
+  <div id="status"></div>
+</div>
+
+<div class="card" id="memoriesCard" style="display:none">
+  <h3>📚 Memories used</h3>
+  <div id="memoriesList"></div>
+</div>
+
+<div class="card" id="recCard" style="display:none">
+  <h3>✅ Recommendation</h3>
+  <p id="recText" style="font-size:16px"></p>
+  <div id="rankedList"></div>
+</div>
+
+<div class="card" id="decisionCard" style="display:none">
+  <h3>2. Manager decision</h3>
+  <button onclick="decide('accept')">Accept</button>
+  <button onclick="decide('modify')">Modify</button>
+  <button onclick="decide('reject')">Reject</button>
+  <div id="decisionStatus"></div>
+</div>
+
+<div class="card" id="outcomeCard" style="display:none">
+  <h3>3. Log the outcome</h3>
+  <input id="actualDelay" placeholder="Actual delay (days)" type="number" value="9">
+  <input id="actualCost" placeholder="Actual cost (lakh INR)" type="number" value="16">
+  <input id="rating" placeholder="Supplier rating (1-5)" type="number" value="5">
+  <input id="notes" placeholder="Notes">
+  <button onclick="submitOutcome()">Submit Outcome</button>
+  <div id="outcomeStatus"></div>
+</div>
+
+<script>
+const API = "http://localhost:8000";
+let currentId = null;
+
+async function runFull() {
+  const text = document.getElementById("signalText").value;
+  document.getElementById("status").innerText = "Creating signal...";
+  const s = await fetch(`${API}/signals`, {
+    method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({text})
+  }).then(r => r.json());
+  currentId = s.id;
+
+  document.getElementById("status").innerText = "Recalling memories from Hindsight...";
+  const analyzed = await fetch(`${API}/signals/${currentId}/analyze`, {method: "POST"}).then(r => r.json());
+
+  document.getElementById("memoriesCard").style.display = "block";
+  document.getElementById("memoriesList").innerHTML =
+    analyzed.memories.length
+      ? analyzed.memories.map(m => `<div class="memchip">${m.slice(0,90)}...</div>`).join("")
+      : "<i>No memories found</i>";
+
+  document.getElementById("status").innerText = "Scoring and generating recommendation...";
+  const rec = await fetch(`${API}/signals/${currentId}/recommend`, {method: "POST"}).then(r => r.json());
+
+  document.getElementById("recCard").style.display = "block";
+  document.getElementById("recText").innerText = rec.text;
+  document.getElementById("rankedList").innerHTML = (rec.ranked_suppliers || []).map(s => `
+    <div style="border-top:1px solid #333;padding:8px 0">
+      <b>${s.supplier}</b>
+      <span class="badge ${s.confidence.toLowerCase()}">${s.confidence}</span>
+      — score ${s.score}, ${s.cases_used} case(s), ${s.avg_response_hours}h avg, ₹${s.avg_cost_lakh}L
+      <br><small>Cited: ${(s.cited_ids||[]).join(", ") || "none"}</small>
+    </div>
+  `).join("");
+
+  document.getElementById("decisionCard").style.display = "block";
+  document.getElementById("status").innerText = "Done.";
+}
+
+async function decide(action) {
+  const reason = prompt(`Reason for ${action}?`, "Looks consistent with past incidents");
+  await fetch(`${API}/signals/${currentId}/decision`, {
+    method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({decision: action, reason})
+  });
+  document.getElementById("decisionStatus").innerText = `Decision "${action}" retained to memory.`;
+  document.getElementById("outcomeCard").style.display = "block";
+}
+
+async function submitOutcome() {
+  const body = {
+    actual_delay_days: parseInt(document.getElementById("actualDelay").value),
+    actual_cost_lakh: parseFloat(document.getElementById("actualCost").value),
+    supplier_rating: parseInt(document.getElementById("rating").value),
+    quality_pass: true,
+    notes: document.getElementById("notes").value
+  };
+  await fetch(`${API}/signals/${currentId}/outcome`, {
+    method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(body)
+  });
+  document.getElementById("outcomeStatus").innerText = "Outcome retained to Hindsight. Bank updated ✓";
+}
+</script>
+</body>
+</html>
